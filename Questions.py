@@ -105,8 +105,7 @@ fit_11 = 1- 0.5 * Coordinates[where_2_fit]**2 / lambda_11**2
 fit_22 = 1- 0.5 * Coordinates[where_2_fit]**2 / lambda_22**2
 fit_33 = 1- 0.5 * Coordinates[where_2_fit]**2 / lambda_33**2
 
-if True:
-
+if PLOTTING:
 
     plt.plot(Coordinates, rho_11, label='Correlation')
     plt.plot(Coordinates[where_2_fit], fit_11, label='2nd order fit', linestyle='--')
@@ -134,3 +133,15 @@ if True:
     plt.tight_layout()
     plt.savefig('figures/rho_33.pdf')
     plt.show()
+
+
+#################################################################       Q3      #################################################################
+
+turbulent_kinetic_energy = 3/2 * np.mean(u_comp**2)
+
+print(f'Turbulent kinetic energy: {turbulent_kinetic_energy}')
+
+dissipation_rate = 15 * Viscosity * np.mean((np.gradient(u_comp, axis=1)**2))
+
+print(f'Dissipation rate: {dissipation_rate}')
+
