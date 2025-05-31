@@ -1,10 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import scipy as sp
+import scipy.io as io
 
-mat_data = sp.io.loadmat('DNS_ucomp.mat')
+mat_data = io.loadmat('DNS_ucomp.mat')
 
 u_comp = mat_data['u']
 
-print(u_comp.shape)
+np.save('u_comp.npy', u_comp)
