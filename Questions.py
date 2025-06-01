@@ -2,15 +2,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from scipy.optimize import curve_fit
+import scipy.io as io
+
 plt.style.use('tableau-colorblind10')
 
 PLOTTING = False
 
+
+mat_data = io.loadmat('DNS_ucomp.mat')
+u_comp = mat_data['u']
+
+
 Viscosity = 0.00776
 Length = 2*np.pi
-
-u_comp = np.load('u_comp.npy')
-
 Coordinates = np.linspace(-Length/2, Length/2, u_comp.shape[0])
 
 #################################################################       Q1      #################################################################
@@ -145,3 +149,31 @@ dissipation_rate = 15 * Viscosity * np.mean((np.gradient(u_comp, axis=1)**2))
 
 print(f'Dissipation rate: {dissipation_rate}')
 
+
+#################################################################       Q4      #################################################################
+
+F11 = np.fft.fft(R11) / len(R11)
+
+k = np.zeros_like(Coordinates)
+nonzero_indices = Coordinates != 0
+k[nonzero_indices] = 2 * np.pi / Coordinates[nonzero_indices]
+
+# Sort k and F11 according to k
+sorted_indices = np.argsort(k)
+k = k[sorted_indices]
+F11 = F11[sorted_indices]
+
+print(f'Sum of F11: {np.sum(np.abs(F11))}')
+print(f'2/3 * turbulent_kinetic_energy: {2/3 * turbulent_kinetic_energy}')
+
+#Kolmogorov Law (scaled to fit the data)
+Kolm = k[k>=0]**(-5/3) * 10**(-3)
+
+plt.loglog(k[k >= 0], np.abs(F11)[k >= 0], label=r'$|F_{11}|$')
+plt.loglog(k[k >= 0], Kolm, linestyle='--', label='Kolmogorov law')
+plt.xlabel('k')
+plt.ylabel(r'$|F_{11}|$')
+plt.legend()
+plt.tight_layout()
+plt.savefig('figures/F11.pdf')
+plt.show()
