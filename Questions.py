@@ -3,10 +3,9 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from scipy.optimize import curve_fit
 import scipy.io as io
-
 plt.style.use('tableau-colorblind10')
 
-PLOTTING = False
+PLOTTING = True
 
 
 mat_data = io.loadmat('DNS_ucomp.mat')
@@ -169,11 +168,12 @@ print(f'2/3 * turbulent_kinetic_energy: {2/3 * turbulent_kinetic_energy}')
 #Kolmogorov Law (scaled to fit the data)
 Kolm = k[k>=0]**(-5/3) * 10**(-3)
 
-plt.loglog(k[k >= 0], np.abs(F11)[k >= 0], label=r'$|F_{11}|$')
-plt.loglog(k[k >= 0], Kolm, linestyle='--', label='Kolmogorov law')
-plt.xlabel('k')
-plt.ylabel(r'$|F_{11}|$')
-plt.legend()
-plt.tight_layout()
-plt.savefig('figures/F11.pdf')
-plt.show()
+if PLOTTING:
+    plt.loglog(k[k >= 0], np.abs(F11)[k >= 0], label=r'$|F_{11}|$')
+    plt.loglog(k[k >= 0], Kolm, linestyle='--', label='Kolmogorov law')
+    plt.xlabel('k')
+    plt.ylabel(r'$|F_{11}|$')
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig('figures/F11.pdf')
+    plt.show()
